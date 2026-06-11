@@ -37,11 +37,15 @@ def main():
         # keep inline <script type=application/json> blocks unterminated
         return json.dumps(obj).replace("</", "<\\/")
 
+    registry_path = Path(__file__).resolve().parent.parent / "references" / "registry.json"
+    registry = json.load(open(registry_path)) if registry_path.exists() else {}
+
     html = Path(args.template).read_text()
     html = (html.replace("{{TITLE}}",
                          f"UX audit — {data.get('meta', {}).get('audit_id', 'report')}")
                 .replace("{{FINDINGS_JSON}}", safe(data))
-                .replace("{{IMAGES_JSON}}", safe(images)))
+                .replace("{{IMAGES_JSON}}", safe(images))
+                .replace("{{REGISTRY_JSON}}", safe(registry)))
     Path(args.out).write_text(html)
     print(f"wrote {args.out} ({len(html) // 1024} KB, {len(images)} screens)")
 

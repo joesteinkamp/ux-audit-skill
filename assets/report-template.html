@@ -49,10 +49,11 @@
   .boxol { position:absolute; border:2.5px solid; border-radius:6px; pointer-events:none;
     opacity:.45; transition:opacity .15s, box-shadow .15s; }
   .boxol.on { opacity:1; box-shadow:0 0 0 6000px rgba(0,0,0,.45); }
-  .mark { position:absolute; width:30px; height:30px; border-radius:50%; transform:translate(-50%,-50%);
-    display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.82rem;
+  .mark { position:absolute; width:34px; height:34px; border-radius:50%; transform:translate(-50%,-50%);
+    display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.86rem;
     color:#111; cursor:pointer; border:2px solid rgba(0,0,0,.55); z-index:5;
-    box-shadow:0 2px 8px rgba(0,0,0,.5); }
+    box-shadow:0 2px 8px rgba(0,0,0,.5); -webkit-tap-highlight-color:transparent; }
+  @media (hover:none) { .boxol { opacity:.7; } .mark { width:38px; height:38px; } }
   .mark:hover, .mark.pinned { z-index:20; }
   .pop { display:none; position:absolute; top:125%; left:-12px; width:360px; max-width:74vw;
     background:var(--panel2); border:1px solid #3a4150; border-radius:10px; padding:12px 15px;
@@ -87,6 +88,17 @@
     gap:6px 22px; font-size:.85rem; margin:8px 0; }
   .passgrid div { color:var(--text); }
   .passgrid b { color:var(--good); font-family:var(--mono); font-size:.78rem; }
+  .chip { display:inline-block; font-family:var(--mono); font-size:.68rem; padding:1px 8px;
+    border-radius:5px; margin:2px 3px 2px 0; background:var(--panel2); color:var(--muted);
+    border:1px solid transparent; cursor:default; }
+  .chip.finding { background:rgba(255,107,107,.16); color:var(--crit); }
+  .chip.hypo { background:rgba(255,169,77,.14); color:var(--high); }
+  .chip.pass { background:rgba(143,211,168,.14); color:var(--good); }
+  .chip.notrun { background:transparent; border-color:var(--border); color:#5b6472; }
+  .fwgroup { margin:10px 0; }
+  .fwgroup .fwname { font-size:.8rem; color:var(--text); font-weight:600; margin-bottom:2px; }
+  .covlegend { font-size:.74rem; color:var(--muted); margin:10px 0 4px; }
+  .covlegend .chip { margin-right:6px; }
   .foot { color:var(--muted); font-size:.8rem; margin-top:44px; border-top:1px solid var(--border);
     padding-top:14px; }
   ul { padding-left:22px; } li { margin:3px 0; }
@@ -96,9 +108,12 @@
 <div class="wrap" id="app"></div>
 <script id="data" type="application/json">{{FINDINGS_JSON}}</script>
 <script id="imgs" type="application/json">{{IMAGES_JSON}}</script>
+<script id="reg" type="application/json">{{REGISTRY_JSON}}</script>
 <script>
 const D = JSON.parse(document.getElementById('data').textContent);
 const IMGS = JSON.parse(document.getElementById('imgs').textContent);
+const REG = (()=>{ try { return JSON.parse(document.getElementById('reg').textContent); }
+  catch(e){ return {}; } })();
 const CATS = ["usability","cognitive_load","visual_layout","accessibility","content","trust_persuasion"];
 const CATLBL = {usability:"Usability",cognitive_load:"Cognitive load",visual_layout:"Visual & layout",
   accessibility:"Accessibility",content:"Content",trust_persuasion:"Trust & persuasion"};
@@ -173,7 +188,8 @@ function render(){
     const sf = all.filter(f=>f.box_2d && (f.screen_index??0)===i);
     const slf = all.filter(f=>!f.box_2d && f.screen_index===i || (!f.box_2d && f.screen_index==null && IMGS.length===1));
     h += `<h2>Screen ${i}${(m.screens&&m.screens[i])?` — ${esc(m.screens[i])}`:""}</h2>`;
-    if(sf.length) h += `<div class="hint">Hover a numbered marker for the finding; click to pin it open.</div>`;
+    if(sf.length) h += `<div class="hint">Tap or hover a numbered marker to see the finding;
+      tap it again (or anywhere else) to close. Box colors = severity.</div>`;
     h += `<div class="shot">
       <img src="${src}">` +
       sf.map(f=>{const[b0,b1,b2,b3]=f.box_2d;
@@ -212,15 +228,50 @@ function render(){
       <div class="hint">Click a column header to sort; click a row to jump to its marker.</div>`;
   } else {
     h += `<div class="empty">✓ No issues found. Every check run on this screen passed —
-      see <strong>What passed</strong> below for the full list. A clean result is a real
-      result; this report never pads findings to look thorough.</div>`;
+      see <strong>Coverage</strong> below for everything that was examined. A clean result
+      is a real result; this report never pads findings to look thorough.</div>`;
   }
 
   if((D.hypotheses||[]).length) h += `<h2>Hypotheses (not scored — require data to confirm)</h2>
     <div class="cards">${D.hypotheses.map(cardHTML).join("")}</div>`;
 
+  // ---- coverage: status every registry principle, not just curated highlights ----
   const cc = D.clean_checks||[];
-  if(cc.length){ h += `<h2>What passed (${cc.length} checks recorded)</h2><div class="passgrid">`+
+  const expand = t => t.replace(/([A-Z]+-)(\d+)\.\.(\d+)/g,(s,p,a,b)=>{const o=[];
+    for(let i=+a;i<=+b;i++)o.push(p+String(i).padStart(a.length,"0"));return o.join(" ");});
+  const obsIds = new Set((D.findings||[]).flatMap(f=>f.principles||[]));
+  const hypIds = new Set((D.hypotheses||[]).flatMap(f=>f.principles||[]));
+  const passIds = new Set();
+  cc.forEach(c=>(expand(c).match(/[A-Z]+-[A-Z0-9.]+/g)||[]).forEach(id=>{if(REG[id])passIds.add(id);}));
+  const isFlow = m.mode==="flow";
+  const status = id => { const r=REG[id];
+    if(obsIds.has(id)) return "finding";
+    if(hypIds.has(id)) return "hypo";
+    if(passIds.has(id)) return "pass";
+    if(r.tier.length===1&&r.tier[0]===3) return "tier3";
+    if(!r.tier.includes(1)&&!isFlow) return "notrun";
+    return "ok"; };
+  const ids = Object.keys(REG);
+  if(ids.length){
+    const counts={finding:0,hypo:0,pass:0,ok:0,notrun:0,tier3:0};
+    ids.forEach(id=>counts[status(id)]++);
+    const examined = counts.finding+counts.pass+counts.ok;
+    h += `<h2>Coverage — ${examined} of ${ids.length} principles examined</h2>
+    <div class="hint">${counts.finding} raised findings · ${counts.pass} passed with documented evidence ·
+      ${counts.ok} examined with nothing to report · ${counts.notrun+counts.tier3} not run
+      (${counts.notrun} need flow context, ${counts.tier3} are Tier-3 hypothesis-only${counts.hypo?`; ${counts.hypo} hypotheses raised`:""})</div>`;
+    const groups={};
+    ids.forEach(id=>{(groups[REG[id].framework]=groups[REG[id].framework]||[]).push(id);});
+    const chipCls={finding:"finding",hypo:"hypo",pass:"pass",ok:"",notrun:"notrun",tier3:"notrun"};
+    h += `<details class="expl"><summary>Full coverage map by framework (tap a chip's label for the principle name)</summary>
+      <div class="covlegend"><span class="chip finding">finding</span><span class="chip hypo">hypothesis</span><span class="chip pass">documented pass</span><span class="chip">examined — nothing to report</span><span class="chip notrun">not run</span></div>` +
+      Object.entries(groups).map(([fw,gids])=>`<div class="fwgroup"><div class="fwname">${esc(fw)}</div>`+
+        gids.map(id=>`<span class="chip ${chipCls[status(id)]}" title="${esc(REG[id].name)}">${esc(id)}</span>`).join("")+
+        `</div>`).join("") +
+      `<div class="hint">"Examined" means the screen was scanned against that principle's symptom
+       checklist within static-screenshot limits; only notable passes get written evidence.</div></details>`;
+  }
+  if(cc.length){ h += `<h2>Documented passes (${cc.length})</h2><div class="passgrid">`+
     cc.map(c=>{const ix=c.indexOf("—")>=0?c.indexOf("—"):c.indexOf(":");
       const head=ix>0?c.slice(0,ix).trim():"", rest=ix>0?c.slice(ix+1).trim():c;
       return `<div>✓ <b>${esc(head)}</b> ${esc(rest)}</div>`;}).join("")+`</div>`; }

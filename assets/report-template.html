@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{TITLE}}</title>
+<style>
+  :root { --bg:#0f1115; --panel:#181b22; --panel2:#1f232d; --border:#2a2f3a; --text:#d7dce4;
+    --muted:#8b93a1; --accent:#6aa9ff; --good:#8fd3a8; --crit:#ff6b6b; --high:#ffa94d;
+    --med:#ffd43b; --low:#74c0fc; --mono:ui-monospace,Menlo,Consolas,monospace; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text);
+    font:15px/1.6 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
+  .wrap { max-width:1080px; margin:0 auto; padding:40px 24px 80px; }
+  h1 { font-size:1.6rem; margin:0 0 2px; } h2 { font-size:1.2rem; margin:40px 0 12px; }
+  .meta { color:var(--muted); font-size:.85rem; margin-bottom:24px; }
+  .meta span { margin-right:14px; }
+  .scorehead { display:flex; gap:28px; align-items:center; background:var(--panel);
+    border:1px solid var(--border); border-radius:12px; padding:22px 26px; flex-wrap:wrap; }
+  .overall { text-align:center; min-width:130px; }
+  .overall .n { font-size:3rem; font-weight:700; line-height:1; }
+  .overall .band { color:var(--muted); font-size:.8rem; margin-top:4px; }
+  .bars { flex:1; min-width:300px; }
+  .bar { display:grid; grid-template-columns:130px 1fr 36px; gap:10px; align-items:center;
+    margin:5px 0; font-size:.82rem; }
+  .bar .track { height:8px; background:var(--panel2); border-radius:4px; overflow:hidden; }
+  .bar .fill { height:100%; border-radius:4px; }
+  .obt { background:var(--panel); border-left:3px solid var(--accent);
+    border-radius:0 8px 8px 0; padding:14px 18px; margin:18px 0; }
+  .obt .label { font-size:.72rem; font-weight:700; text-transform:uppercase;
+    letter-spacing:1px; color:var(--accent); display:block; margin-bottom:4px; }
+  .screenbox { position:relative; display:inline-block; max-width:100%;
+    border:1px solid var(--border); border-radius:8px; overflow:hidden; margin:8px 0; }
+  .screenbox img { display:block; max-width:100%; height:auto; }
+  .hl { position:absolute; border:3px solid #fff; border-radius:6px; opacity:0;
+    pointer-events:none; transition:opacity .2s; box-shadow:0 0 0 2000px rgba(0,0,0,.45); }
+  .hl.on { opacity:1; }
+  .screenwrap { display:grid; grid-template-columns:minmax(0,1.4fr) minmax(260px,1fr);
+    gap:18px; margin:14px 0 30px; align-items:start; }
+  @media (max-width:800px){ .screenwrap{grid-template-columns:1fr;} }
+  .cards { display:flex; flex-direction:column; gap:8px; }
+  .card { background:var(--panel); border:1px solid var(--border); border-radius:8px;
+    padding:10px 14px; cursor:pointer; font-size:.86rem; }
+  .card:hover { border-color:var(--accent); }
+  .card .top { display:flex; gap:8px; align-items:center; margin-bottom:3px; }
+  .card .num { font-family:var(--mono); color:var(--muted); font-size:.78rem; }
+  .card .reco { color:var(--muted); margin-top:3px; }
+  .card .cite { font-family:var(--mono); font-size:.72rem; color:var(--accent); margin-top:4px; }
+  .pill { display:inline-block; padding:0 8px; border-radius:999px; font-size:.72rem;
+    font-weight:600; }
+  .pill.critical { background:rgba(255,107,107,.15); color:var(--crit); }
+  .pill.high { background:rgba(255,169,77,.15); color:var(--high); }
+  .pill.medium { background:rgba(255,212,59,.15); color:var(--med); }
+  .pill.low { background:rgba(116,192,252,.15); color:var(--low); }
+  table { border-collapse:collapse; width:100%; font-size:.85rem; margin:12px 0; }
+  th,td { border:1px solid var(--border); padding:6px 10px; text-align:left; vertical-align:top; }
+  th { background:var(--panel2); cursor:pointer; user-select:none; }
+  tr:nth-child(even) td { background:var(--panel); }
+  .hyp { border-left:3px solid var(--high); }
+  .foot { color:var(--muted); font-size:.8rem; margin-top:40px; border-top:1px solid var(--border);
+    padding-top:14px; }
+  .clean { color:var(--good); font-size:.85rem; }
+  ul { padding-left:22px; } li { margin:3px 0; }
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<script id="data" type="application/json">{{FINDINGS_JSON}}</script>
+<script id="imgs" type="application/json">{{IMAGES_JSON}}</script>
+<script>
+const D = JSON.parse(document.getElementById('data').textContent);
+const IMGS = JSON.parse(document.getElementById('imgs').textContent);
+const CATS = ["usability","cognitive_load","visual_layout","accessibility","content","trust_persuasion"];
+const CATLBL = {usability:"Usability",cognitive_load:"Cognitive load",visual_layout:"Visual & layout",
+  accessibility:"Accessibility",content:"Content",trust_persuasion:"Trust & persuasion"};
+const band = s => s>=90?"exceptional":s>=80?"strong":s>=66?"functional":s>=50?"broken flows":"fundamentally broken";
+const sCol = s => s>=80?"var(--good)":s>=66?"var(--low)":s>=50?"var(--med)":"var(--crit)";
+const esc = t => (t??"").toString().replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const num = id => (id.match(/\d+/)||[id])[0];
+
+function findingCard(f){
+  return `<div class="card ${f.type==='hypothesis'?'hyp':''}" data-id="${esc(f.id)}"
+    onclick="highlight('${esc(f.id)}')">
+    <div class="top"><span class="num">#${num(f.id)}</span>
+      <span class="pill ${f.severity}">${f.severity}</span>
+      <strong>${esc(f.issue)}</strong></div>
+    <div>${esc(f.why_it_matters)}</div>
+    <div class="reco">→ ${esc(f.recommendation)}${f.evidence?` <em>(${esc(f.evidence)})</em>`:""}</div>
+    ${f.validation?`<div class="reco">Validate: ${esc(f.validation)}</div>`:""}
+    <div class="cite">${(f.principles||[]).map(esc).join(" · ")} · ${esc(f.element||"")}</div></div>`;
+}
+
+function render(){
+  const all = (D.findings||[]).concat(D.hypotheses||[]);
+  const m = D.meta||{};
+  let h = `<h1>UX audit — ${esc(m.audit_id||"report")}</h1>
+  <div class="meta"><span>${esc(m.date||"")}</span><span>mode: ${esc(m.mode||"")}</span>
+    <span>goal: ${esc(m.goal||"")}</span><span>persona: ${esc(m.persona||"")}</span>
+    <span>platform: ${esc(m.platform||"")}</span><span>stage: ${esc(m.stage||"")}</span></div>`;
+  const sc = D.scores||{};
+  h += `<div class="scorehead"><div class="overall">
+    <div class="n" style="color:${sCol(sc.overall)}">${sc.overall}</div>
+    <div class="band">${band(sc.overall)}</div></div><div class="bars">` +
+    CATS.map(c=>`<div class="bar"><span>${CATLBL[c]}</span>
+      <span class="track"><span class="fill" style="width:${sc[c]||0}%;background:${sCol(sc[c]||0)}"></span></span>
+      <span>${sc[c]??"—"}</span></div>`).join("") + `</div></div>`;
+  h += `<div class="obt"><span class="label">One big thing</span>${esc(D.one_big_thing)}</div>`;
+
+  (IMGS||[]).forEach((src,i)=>{
+    const sf = all.filter(f=>f.box_2d && (f.screen_index??0)===i);
+    const slf = all.filter(f=>!f.box_2d && (f.screen_index??(IMGS.length>1?null:0))===i);
+    h += `<h2>Screen ${i}${(D.meta.screens&&D.meta.screens[i])?` — ${esc(D.meta.screens[i])}`:""}</h2>
+    <div class="screenwrap"><div class="screenbox" id="sb-${i}"><img src="${src}">`+
+    sf.map(f=>{const[b0,b1,b2,b3]=f.box_2d;
+      return `<div class="hl" id="hl-${esc(f.id)}" style="top:${b0/10}%;left:${b1/10}%;
+        height:${(b2-b0)/10}%;width:${(b3-b1)/10}%"></div>`;}).join("")+
+    `</div><div class="cards">`+sf.concat(slf).map(findingCard).join("")+`</div></div>`;
+  });
+
+  const cross = all.filter(f=>f.screen_index==null && IMGS.length>1);
+  if(cross.length) h += `<h2>Cross-screen findings</h2><div class="cards">`+
+    cross.map(findingCard).join("")+`</div>`;
+
+  if(D.flow){ h += `<h2>Flow analysis</h2>`;
+    if((D.flow.transitions||[]).length) h += `<table><tr><th>Transition</th><th>Verdict</th><th>Note</th></tr>`+
+      D.flow.transitions.map(t=>`<tr><td>${t.from} → ${t.to}</td><td>${esc(t.verdict)}</td><td>${esc(t.note)}</td></tr>`).join("")+`</table>`;
+    if((D.flow.missing_states||[]).length) h += `<p><strong>Missing states:</strong></p><ul>`+
+      D.flow.missing_states.map(s=>`<li>${esc(s)}</li>`).join("")+`</ul>`;
+    if(D.flow.peak_end) h += `<p><strong>Peak–end:</strong> ${esc(D.flow.peak_end)}</p>`; }
+
+  if(D.delta){ h += `<h2>Re-audit delta</h2><table><tr><th>Fixed</th><th>Regressed</th><th>New</th><th>Unchanged</th></tr>
+    <tr><td>${(D.delta.fixed||[]).join(", ")||"—"}</td><td>${(D.delta.regressed||[]).join(", ")||"—"}</td>
+    <td>${(D.delta.new||[]).join(", ")||"—"}</td><td>${(D.delta.unchanged||[]).join(", ")||"—"}</td></tr></table>`; }
+
+  h += `<h2>All findings</h2><table id="ftab"><thead><tr>
+    <th onclick="sortBy('importance')">Importance ↓</th><th onclick="sortBy('severity')">Severity</th>
+    <th onclick="sortBy('category')">Category</th><th>Issue</th><th>Recommendation</th><th>Principles</th>
+    </tr></thead><tbody></tbody></table>`;
+
+  if((D.hypotheses||[]).length) h += `<h2>Hypotheses (not scored — require data to confirm)</h2>
+    <div class="cards">`+D.hypotheses.map(findingCard).join("")+`</div>`;
+
+  if((D.clean_checks||[]).length) h += `<h2>What passed</h2><ul class="clean">`+
+    D.clean_checks.map(c=>`<li>${esc(c)}</li>`).join("")+`</ul>`;
+
+  h += `<div class="foot"><strong>Methodology.</strong> Frameworks: ${(m.frameworks_applied||[]).map(esc).join(", ")}.
+    Tiers run: ${(m.tiers_run||[]).join(", ")}. ${m.issue_overflow?`Issue overflow (dropped by 5-per-category cap): ${m.issue_overflow}. `:""}
+    Not auditable from static screenshots: focus order, ARIA/alt text, keyboard access, real latency — verify in code or live.
+    Numeric claims carry <code>measured:</code> evidence from measure.py. Model: ${esc(m.model||"")}. ${esc(m.date||"")}.</div>`;
+
+  document.getElementById('app').innerHTML = h;
+  fillTable((D.findings||[]).slice().sort((a,b)=>(b.importance||0)-(a.importance||0)));
+}
+const SEVO = {critical:3,high:2,medium:1,low:0};
+function fillTable(rows){
+  document.querySelector('#ftab tbody').innerHTML = rows.map(f=>
+    `<tr onclick="highlight('${esc(f.id)}')"><td>${f.importance??""}</td>
+    <td><span class="pill ${f.severity}">${f.severity}</span></td><td>${CATLBL[f.category]||f.category}</td>
+    <td><strong>#${num(f.id)}</strong> ${esc(f.issue)}</td><td>${esc(f.recommendation)}</td>
+    <td style="font-family:var(--mono);font-size:.75rem">${(f.principles||[]).map(esc).join("<br>")}</td></tr>`).join("");
+}
+function sortBy(k){
+  const rows=(D.findings||[]).slice().sort((a,b)=> k==='severity'?(SEVO[b.severity]-SEVO[a.severity])
+    : k==='category'?String(a.category).localeCompare(b.category):(b[k]||0)-(a[k]||0));
+  fillTable(rows);
+}
+function highlight(id){
+  document.querySelectorAll('.hl.on').forEach(e=>e.classList.remove('on'));
+  const el=document.getElementById('hl-'+id);
+  if(el){ el.classList.add('on'); el.closest('.screenbox').scrollIntoView({behavior:'smooth',block:'center'});
+    setTimeout(()=>el.classList.remove('on'),2600); }
+}
+render();
+</script>
+</body>
+</html>

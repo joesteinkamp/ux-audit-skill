@@ -28,6 +28,8 @@ category: usability          # usability | cognitive_load | visual_layout | acce
 ```
 
 Rules:
+- Files with `status: informational` in frontmatter are excluded from the registry and
+  from evaluation entirely — they are background reading only (e.g. fogg.md).
 - IDs are immutable once published (findings and fixtures cite them).
 - Every Tier-1 principle needs ≥2 observable symptoms. Symptoms are concrete visual
   cues ("submit button with no pressed/disabled variant visible"), not restated theory.

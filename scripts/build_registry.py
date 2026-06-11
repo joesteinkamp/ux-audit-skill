@@ -54,6 +54,9 @@ def main():
         sys.exit("ERROR: no framework files found")
     for path in files:
         text = path.read_text()
+        if re.search(r"^status:\s*informational\s*$", text, re.M):
+            print(f"  (skipping {path.name}: informational only)")
+            continue
         fm = parse_frontmatter(text, path)
         for pid, name, definition in parse_principles(text, path):
             if pid in registry:
@@ -70,7 +73,7 @@ def main():
     counts = {}
     for v in registry.values():
         counts[v["file"]] = counts.get(v["file"], 0) + 1
-    print(f"registry.json: {len(registry)} principles from {len(files)} files")
+    print(f"registry.json: {len(registry)} principles from {len(counts)} files")
     for f, n in sorted(counts.items()):
         print(f"  {f}: {n}")
 

@@ -20,8 +20,6 @@ All scripts: `$SKILL/.venv/bin/python $SKILL/scripts/<script>` — contracts in 
 3. **Platform**: mobile touch / desktop / responsive. (Touch ⇒ 44px target minimum, else 24px.)
 4. **Stage**: live product / hi-fi mockup / wireframe. Calibration: wireframe ⇒ skip
    visual_layout color+contrast checks and content polish; hi-fi ⇒ don't flag placeholder data.
-5. **Optional 5th, only if goal mentions conversion/sales/signup**: "Also analyze
-   conversion/persuasion? Findings will be hypotheses to test, not scored issues." (Tier 3 opt-in.)
 
 ## 2. Mode detection
 - 1 image → **single** mode. 2+ images → **flow** mode: confirm screen order with the user
@@ -34,7 +32,8 @@ All scripts: `$SKILL/.venv/bin/python $SKILL/scripts/<script>` — contracts in 
   `gerhardt-powals.md`, `content-design.md`, `cialdini.md`, `recurring-failures.md`.
 - Flow mode adds Tier 2: `nielsen.md`, `norman.md`, `shneiderman.md`, `tognazzini.md`.
   (Single mode: still load `nielsen.md` + `norman.md` — their Tier-1 symptoms apply.)
-- Tier 3 opt-in adds: cialdini.md's Tier-3 effectiveness section (hypotheses only).
+- Never load files marked `status: informational` (e.g. `fogg.md`) — Tier 3 behavioral
+  analysis is out of scope entirely; never claim effectiveness, timing, or conversion impact.
 
 ## 4. Measure (before any judgment)
 Run the auto pass: `measure.py <images> --json tmp/measurements.json`. During analysis,
@@ -51,8 +50,6 @@ principle ID and name its `element` in plain text. Localized ⇒ box_2d; whole-s
 Flow mode additionally: transition pass — cross-screen consistency (NLS-04/SHN-01), action
 acknowledgement (NLS-01/SHN-03), exits/undo (NLS-03/SHN-06), memory load (SHN-08/RF-12),
 peak-end on the final screen (PEAK-01); populate the `flow` block.
-Tier-3 opt-in: persuasion-effectiveness hypotheses only (cialdini.md Tier-3 boundary),
-each with a validation method.
 Also record `clean_checks`: categories/principles examined that passed.
 
 ## 6. Filter, merge, score

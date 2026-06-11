@@ -2,7 +2,7 @@
 prefix: TOG
 framework: "Tognazzini's First Principles of Interaction Design"
 source: https://asktog.com/atc/principles-of-interaction-design/
-tier: [1, 2, 3]
+tier: [1, 2]
 category: usability
 ---
 ## Principles
@@ -40,7 +40,8 @@ category: usability
 **TOG-15** (tier 2): long form with no save-draft cue; warning that leaving loses work, with no alternative.
 **TOG-16**: body text under ~14px or low contrast (cite measured values with WCAG-1.4.3); centered long-form paragraphs; hierarchy invisible when squinting.
 **TOG-19**: no cue of current location within the product; sections with identical headers and no breadcrumb on deep content.
-Tier-3 (TOG-08, TOG-13, latency impact): efficiency/learnability claims need timed studies — hypothesis only.
+Scope note: TOG-08 efficiency and TOG-13 learnability need timed studies — only flag
+visible symptoms (e.g. forced wizard for a trivial task), never timing/learning claims.
 
 ## Worked example
 ```json

@@ -2,7 +2,7 @@
 prefix: HICK, FITTS, MILL, JAKOB, PEAK
 framework: "Cognitive laws (Hick, Fitts, Miller, Jakob, Peak-End)"
 source: https://lawsofux.com/
-tier: [1, 2, 3]
+tier: [1, 2]
 category: cognitive_load
 ---
 ## Principles
@@ -21,9 +21,9 @@ category: cognitive_load
 **JAKOB-01**: standard controls in unconventional locations (cart top-left, close button bottom); novel interaction metaphors for solved problems (custom-drawn non-standard form controls); link styling on non-links.
 **PEAK-01** (tier 2): flow's final screen is a dead end or form rather than confirmation/accomplishment; the likely emotional peak (payment, error) has the weakest design investment in the sequence.
 
-## Tier-3 boundary (hypothesis-only beyond visual evidence)
-Timing claims ("this menu slows users by X") require analytics or timed studies —
-emit as hypothesis with a validation method. Visible symptoms above are fair Tier-1/2 findings.
+## Scope note (informational)
+Timing claims ("this menu slows users by X") require analytics or timed studies and are
+NOT evaluated — never assert them. Visible symptoms above are fair Tier-1/2 findings.
 
 ## Worked example
 ```json

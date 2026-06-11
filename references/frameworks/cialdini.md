@@ -2,7 +2,7 @@
 prefix: CLD, DARK
 framework: "Cialdini's Principles of Influence + dark-pattern checks"
 source: https://fs.blog/influence-psychology-persuasion/
-tier: [1, 3]
+tier: [1]
 category: trust_persuasion
 ---
 ## Principles
@@ -35,10 +35,10 @@ Dark-pattern checks — unethical applications, visible as artifacts (Tier 1):
 Positive CLD checks: missing trust signals at high-commitment moments (no security cue at payment,
 no social proof on an unknown brand's signup) — flag as trust-signal gap citing CLD-03/CLD-05 + RF-09.
 
-## Tier-3 boundary
+## Scope note (informational)
 Whether persuasion elements WORK (lift conversion, backfire via reactance) is an A/B
-question — hypothesis only, with the experiment named. The PRESENCE of dark patterns
-(DARK-01…06) is an observed Tier-1 finding and scores normally.
+question and is NOT evaluated by this skill — never claim effectiveness. The PRESENCE
+of dark patterns (DARK-01…06) is an observed Tier-1 finding and scores normally.
 
 ## Worked example
 ```json

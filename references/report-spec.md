@@ -18,7 +18,7 @@ links here and never restates it.
   "score_rationales": { "usability": "one sentence naming the band and why", "...": "..." },
   "one_big_thing": "single falsifiable root-cause diagnosis",
   "findings": [ /* type:"observed" only — Finding objects below */ ],
-  "hypotheses": [ /* type:"hypothesis" — same shape + required "validation" */ ],
+  "hypotheses": [ /* reserved — Tier 3 is informational-only and never evaluated; stays empty */ ],
   "flow": { "transitions": [{"from": 0, "to": 1, "verdict": "ok|issue", "note": "..."}],
             "missing_states": ["..."], "peak_end": "..." },
   "measurements": { /* verbatim measure.py output */ },

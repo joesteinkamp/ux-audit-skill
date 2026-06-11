@@ -3,8 +3,7 @@
   "name": "Reciprocation",
   "framework": "Cialdini's Principles of Influence + dark-pattern checks",
   "tier": [
-   1,
-   3
+   1
   ],
   "category": "trust_persuasion",
   "file": "cialdini.md"
@@ -13,8 +12,7 @@
   "name": "Commitment & consistency",
   "framework": "Cialdini's Principles of Influence + dark-pattern checks",
   "tier": [
-   1,
-   3
+   1
   ],
   "category": "trust_persuasion",
   "file": "cialdini.md"
@@ -23,8 +21,7 @@
   "name": "Social proof",
   "framework": "Cialdini's Principles of Influence + dark-pattern checks",
   "tier": [
-   1,
-   3
+   1
   ],
   "category": "trust_persuasion",
   "file": "cialdini.md"
@@ -33,8 +30,7 @@
   "name": "Liking",
   "framework": "Cialdini's Principles of Influence + dark-pattern checks",
   "tier": [
-   1,
-   3
+   1
   ],
   "category": "trust_persuasion",
   "file": "cialdini.md"
@@ -43,8 +39,7 @@
   "name": "Authority",
   "framework": "Cialdini's Principles of Influence + dark-pattern checks",
   "tier": [
-   1,
-   3
+   1
   ],
   "category": "trust_persuasion",
   "file": "cialdini.md"
@@ -53,8 +48,7 @@
   "name": "Scarcity",
   "framework": "Cialdini's Principles of Influence + dark-pattern checks",
   "tier": [
-   1,
-   3
+   1
   ],
   "category": "trust_persuasion",
   "file": "cialdini.md"
@@ -63,8 +57,7 @@
   "name": "Fake scarcity/urgency",
   "framework": "Cialdini's Principles of Influence + dark-pattern checks",
   "tier": [
-   1,
-   3
+   1
   ],
   "category": "trust_persuasion",
   "file": "cialdini.md"
@@ -73,8 +66,7 @@
   "name": "Manufactured social proof",
   "framework": "Cialdini's Principles of Influence + dark-pattern checks",
   "tier": [
-   1,
-   3
+   1
   ],
   "category": "trust_persuasion",
   "file": "cialdini.md"
@@ -83,8 +75,7 @@
   "name": "Pre-checked commitment",
   "framework": "Cialdini's Principles of Influence + dark-pattern checks",
   "tier": [
-   1,
-   3
+   1
   ],
   "category": "trust_persuasion",
   "file": "cialdini.md"
@@ -93,8 +84,7 @@
   "name": "Confirmshaming",
   "framework": "Cialdini's Principles of Influence + dark-pattern checks",
   "tier": [
-   1,
-   3
+   1
   ],
   "category": "trust_persuasion",
   "file": "cialdini.md"
@@ -103,8 +93,7 @@
   "name": "Forced continuity / hidden exit",
   "framework": "Cialdini's Principles of Influence + dark-pattern checks",
   "tier": [
-   1,
-   3
+   1
   ],
   "category": "trust_persuasion",
   "file": "cialdini.md"
@@ -113,8 +102,7 @@
   "name": "Hidden costs",
   "framework": "Cialdini's Principles of Influence + dark-pattern checks",
   "tier": [
-   1,
-   3
+   1
   ],
   "category": "trust_persuasion",
   "file": "cialdini.md"
@@ -124,8 +112,7 @@
   "framework": "Cognitive laws (Hick, Fitts, Miller, Jakob, Peak-End)",
   "tier": [
    1,
-   2,
-   3
+   2
   ],
   "category": "cognitive_load",
   "file": "cognitive-laws.md"
@@ -135,8 +122,7 @@
   "framework": "Cognitive laws (Hick, Fitts, Miller, Jakob, Peak-End)",
   "tier": [
    1,
-   2,
-   3
+   2
   ],
   "category": "cognitive_load",
   "file": "cognitive-laws.md"
@@ -146,8 +132,7 @@
   "framework": "Cognitive laws (Hick, Fitts, Miller, Jakob, Peak-End)",
   "tier": [
    1,
-   2,
-   3
+   2
   ],
   "category": "cognitive_load",
   "file": "cognitive-laws.md"
@@ -157,8 +142,7 @@
   "framework": "Cognitive laws (Hick, Fitts, Miller, Jakob, Peak-End)",
   "tier": [
    1,
-   2,
-   3
+   2
   ],
   "category": "cognitive_load",
   "file": "cognitive-laws.md"
@@ -168,8 +152,7 @@
   "framework": "Cognitive laws (Hick, Fitts, Miller, Jakob, Peak-End)",
   "tier": [
    1,
-   2,
-   3
+   2
   ],
   "category": "cognitive_load",
   "file": "cognitive-laws.md"
@@ -814,8 +797,7 @@
   "framework": "Tognazzini's First Principles of Interaction Design",
   "tier": [
    1,
-   2,
-   3
+   2
   ],
   "category": "usability",
   "file": "tognazzini.md"
@@ -825,8 +807,7 @@
   "framework": "Tognazzini's First Principles of Interaction Design",
   "tier": [
    1,
-   2,
-   3
+   2
   ],
   "category": "usability",
   "file": "tognazzini.md"
@@ -836,8 +817,7 @@
   "framework": "Tognazzini's First Principles of Interaction Design",
   "tier": [
    1,
-   2,
-   3
+   2
   ],
   "category": "usability",
   "file": "tognazzini.md"
@@ -847,8 +827,7 @@
   "framework": "Tognazzini's First Principles of Interaction Design",
   "tier": [
    1,
-   2,
-   3
+   2
   ],
   "category": "usability",
   "file": "tognazzini.md"
@@ -858,8 +837,7 @@
   "framework": "Tognazzini's First Principles of Interaction Design",
   "tier": [
    1,
-   2,
-   3
+   2
   ],
   "category": "usability",
   "file": "tognazzini.md"
@@ -869,8 +847,7 @@
   "framework": "Tognazzini's First Principles of Interaction Design",
   "tier": [
    1,
-   2,
-   3
+   2
   ],
   "category": "usability",
   "file": "tognazzini.md"
@@ -880,8 +857,7 @@
   "framework": "Tognazzini's First Principles of Interaction Design",
   "tier": [
    1,
-   2,
-   3
+   2
   ],
   "category": "usability",
   "file": "tognazzini.md"
@@ -891,8 +867,7 @@
   "framework": "Tognazzini's First Principles of Interaction Design",
   "tier": [
    1,
-   2,
-   3
+   2
   ],
   "category": "usability",
   "file": "tognazzini.md"
@@ -902,8 +877,7 @@
   "framework": "Tognazzini's First Principles of Interaction Design",
   "tier": [
    1,
-   2,
-   3
+   2
   ],
   "category": "usability",
   "file": "tognazzini.md"
@@ -913,8 +887,7 @@
   "framework": "Tognazzini's First Principles of Interaction Design",
   "tier": [
    1,
-   2,
-   3
+   2
   ],
   "category": "usability",
   "file": "tognazzini.md"
@@ -924,8 +897,7 @@
   "framework": "Tognazzini's First Principles of Interaction Design",
   "tier": [
    1,
-   2,
-   3
+   2
   ],
   "category": "usability",
   "file": "tognazzini.md"
@@ -935,8 +907,7 @@
   "framework": "Tognazzini's First Principles of Interaction Design",
   "tier": [
    1,
-   2,
-   3
+   2
   ],
   "category": "usability",
   "file": "tognazzini.md"
@@ -946,8 +917,7 @@
   "framework": "Tognazzini's First Principles of Interaction Design",
   "tier": [
    1,
-   2,
-   3
+   2
   ],
   "category": "usability",
   "file": "tognazzini.md"
@@ -957,8 +927,7 @@
   "framework": "Tognazzini's First Principles of Interaction Design",
   "tier": [
    1,
-   2,
-   3
+   2
   ],
   "category": "usability",
   "file": "tognazzini.md"
@@ -968,8 +937,7 @@
   "framework": "Tognazzini's First Principles of Interaction Design",
   "tier": [
    1,
-   2,
-   3
+   2
   ],
   "category": "usability",
   "file": "tognazzini.md"
@@ -979,8 +947,7 @@
   "framework": "Tognazzini's First Principles of Interaction Design",
   "tier": [
    1,
-   2,
-   3
+   2
   ],
   "category": "usability",
   "file": "tognazzini.md"
@@ -990,8 +957,7 @@
   "framework": "Tognazzini's First Principles of Interaction Design",
   "tier": [
    1,
-   2,
-   3
+   2
   ],
   "category": "usability",
   "file": "tognazzini.md"
@@ -1001,8 +967,7 @@
   "framework": "Tognazzini's First Principles of Interaction Design",
   "tier": [
    1,
-   2,
-   3
+   2
   ],
   "category": "usability",
   "file": "tognazzini.md"
@@ -1012,8 +977,7 @@
   "framework": "Tognazzini's First Principles of Interaction Design",
   "tier": [
    1,
-   2,
-   3
+   2
   ],
   "category": "usability",
   "file": "tognazzini.md"

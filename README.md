@@ -16,7 +16,7 @@ platform, artifact stage), then the audit runs. Outputs land in `audits/<slug>-<
 | `plan.html` | Design plan (frameworks, tiers, scoring model, architecture) |
 | `execution-plan.html` | Milestone/task breakdown M0–M7 with gates |
 | `SKILL.md` | The skill itself |
-| `references/` | Scoring rubric, filter, report spec, 11 framework files + registry |
+| `references/` | Scoring rubric, filter, report spec, 12 framework files (1 informational, excluded from evaluation) + registry |
 | `scripts/` | measure / annotate / build_report / registry / fixtures (see scripts/README.md) |
 | `fixtures/` | Golden screenshots + expected findings for calibration |
 

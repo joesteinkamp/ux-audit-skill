@@ -1,0 +1,41 @@
+{
+  "meta": {
+    "audit_id": "polished-settings-2026-06-11", "date": "2026-06-11", "mode": "single",
+    "screens": ["screen-0.png"], "goal": "Update profile name and email",
+    "persona": "returning user", "platform": "desktop", "stage": "hifi",
+    "frameworks_applied": ["nielsen", "norman", "gestalt", "wcag", "cognitive-laws",
+      "gerhardt-powals", "content-design", "cialdini", "recurring-failures"],
+    "tiers_run": [1], "issue_overflow": 0, "model": "claude-fable-5"
+  },
+  "scores": {
+    "overall": 89, "usability": 90, "cognitive_load": 92, "visual_layout": 90,
+    "accessibility": 88, "content": 88, "trust_persuasion": 85
+  },
+  "score_rationales": {
+    "usability": "Band 90+: one clearly primary action, conventional layout, visible active nav state, nothing destructive unguarded.",
+    "cognitive_load": "Band 90+: two fields, one decision, no mental work the UI could do.",
+    "visual_layout": "Band 90+: grouping matches semantics; single hierarchy passes the squint test.",
+    "accessibility": "Band 80-89: measured contrast passes on CTA (6.7:1) and helper text (5.31:1); all inputs visibly labeled; focus states unverifiable from a static image.",
+    "content": "Band 80-89: outcome-named CTA and useful helper copy; truncated account label in the header is the only blemish.",
+    "trust_persuasion": "Band 80-89: no dark patterns; no high-stakes ask on this screen requiring trust signals."
+  },
+  "one_big_thing": "Nothing structural to fix on this screen; the lowest-value real improvement is confirming saves visibly, which can only be evaluated with the post-save screen.",
+  "findings": [],
+  "hypotheses": [],
+  "measurements": {
+    "screens": [{"file": "screen-0.png", "width": 1440, "height": 900, "regions": [
+      {"box_2d": [466, 222, 520, 333], "kind": "text", "fg": "#ffffff", "bg": "#1d4ed8", "contrast": 6.7, "height_px": 49},
+      {"box_2d": [395, 220, 418, 390], "kind": "text", "fg": "#636c79", "bg": "#ffffff", "contrast": 5.31, "height_px": 14}
+    ]}]
+  },
+  "clean_checks": [
+    "WCAG-3.3.2: both inputs have persistent visible labels",
+    "WCAG-1.4.3: primary CTA 6.7:1 and helper text 5.31:1, measured passes",
+    "NRM-06: active nav item differentiated by weight and accent bar, not color alone",
+    "RF-04/CNT-01: 'Save changes' names its outcome",
+    "GST-01/GST-07: label-field-helper grouping matches semantics",
+    "RF-08: a single primary action; Cancel is visibly secondary",
+    "DARK-01..06: no dark patterns",
+    "Not auditable statically: save feedback (NLS-01), focus indicators, keyboard order — verify live"
+  ]
+}

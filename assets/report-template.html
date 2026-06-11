@@ -88,17 +88,14 @@
     gap:6px 22px; font-size:.85rem; margin:8px 0; }
   .passgrid div { color:var(--text); }
   .passgrid b { color:var(--good); font-family:var(--mono); font-size:.78rem; }
-  .chip { display:inline-block; font-family:var(--mono); font-size:.68rem; padding:1px 8px;
-    border-radius:5px; margin:2px 3px 2px 0; background:var(--panel2); color:var(--muted);
-    border:1px solid transparent; cursor:default; }
-  .chip.finding { background:rgba(255,107,107,.16); color:var(--crit); }
-  .chip.hypo { background:rgba(255,169,77,.14); color:var(--high); }
-  .chip.pass { background:rgba(143,211,168,.14); color:var(--good); }
-  .chip.notrun { background:transparent; border-color:var(--border); color:#5b6472; }
-  .fwgroup { margin:10px 0; }
-  .fwgroup .fwname { font-size:.8rem; color:var(--text); font-weight:600; margin-bottom:2px; }
-  .covlegend { font-size:.74rem; color:var(--muted); margin:10px 0 4px; }
-  .covlegend .chip { margin-right:6px; }
+  .fwname { font-size:.86rem; color:var(--text); font-weight:600; margin:16px 0 4px; }
+  .covtab { margin:4px 0 10px; }
+  .covtab td { padding:4px 9px; font-size:.8rem; }
+  .covtab .st { white-space:nowrap; font-size:.74rem; font-weight:600; width:130px; }
+  .covtab .st.finding { color:var(--crit); } .covtab .st.hypo { color:var(--high); }
+  .covtab .st.pass { color:var(--good); } .covtab .st.okst { color:#79a98f; }
+  .covtab .st.nr { color:#5b6472; }
+  .covnote { color:var(--muted); font-size:.76rem; }
   .foot { color:var(--muted); font-size:.8rem; margin-top:44px; border-top:1px solid var(--border);
     padding-top:14px; }
   ul { padding-left:22px; } li { margin:3px 0; }
@@ -195,11 +192,15 @@ function render(){
       sf.map(f=>{const[b0,b1,b2,b3]=f.box_2d;
         return `<div class="boxol" id="hl-${esc(f.id)}" style="top:${b0/10}%;left:${b1/10}%;
           height:${(b2-b0)/10}%;width:${(b3-b1)/10}%;border-color:${SEVC[f.severity]}"></div>`;}).join("") +
-      sf.map(f=>{const[b0,b1]= f.box_2d;
-        const cls = (f.box_2d[1]>620?"flip ":"")+(f.box_2d[0]>720?"up":"");
-        return `<div class="mark ${cls}" id="mk-${esc(f.id)}" style="top:${b0/10}%;left:${b1/10}%;
+      (()=>{const placed=[];
+       return sf.map(f=>{const[b0,b1]=f.box_2d;
+        let x=b1/10; const y=b0/10;
+        while(placed.some(p=>Math.abs(p.x-x)<3.1&&Math.abs(p.y-y)<3.6)) x+=3.3;
+        placed.push({x,y});
+        const cls = (x>62?"flip ":"")+(b0>720?"up":"");
+        return `<div class="mark ${cls}" id="mk-${esc(f.id)}" style="top:${y}%;left:${x}%;
           background:${SEVC[f.severity]}" onclick="pin(event,this)"
-          onmouseenter="glow('${esc(f.id)}',1)" onmouseleave="glow('${esc(f.id)}',0)">${num(f.id)}${popHTML(f)}</div>`;}).join("") +
+          onmouseenter="glow('${esc(f.id)}',1)" onmouseleave="glow('${esc(f.id)}',0)">${num(f.id)}${popHTML(f)}</div>`;}).join("");})() +
     `</div>`;
     if(slf.length) h += `<div class="hint">Screen-level findings (no single location):</div>
       <div class="cards">${slf.map(cardHTML).join("")}</div>`;
@@ -235,14 +236,19 @@ function render(){
   if((D.hypotheses||[]).length) h += `<h2>Hypotheses (not scored — require data to confirm)</h2>
     <div class="cards">${D.hypotheses.map(cardHTML).join("")}</div>`;
 
-  // ---- coverage: status every registry principle, not just curated highlights ----
+  // ---- coverage: every registry principle, comprehensively, with names + evidence ----
   const cc = D.clean_checks||[];
   const expand = t => t.replace(/([A-Z]+-)(\d+)\.\.(\d+)/g,(s,p,a,b)=>{const o=[];
     for(let i=+a;i<=+b;i++)o.push(p+String(i).padStart(a.length,"0"));return o.join(" ");});
   const obsIds = new Set((D.findings||[]).flatMap(f=>f.principles||[]));
   const hypIds = new Set((D.hypotheses||[]).flatMap(f=>f.principles||[]));
-  const passIds = new Set();
-  cc.forEach(c=>(expand(c).match(/[A-Z]+-[A-Z0-9.]+/g)||[]).forEach(id=>{if(REG[id])passIds.add(id);}));
+  const passIds = new Set(), noteById = {};
+  cc.forEach(c=>{ // evidence IDs live in the head, before the first dash/colon
+    const cut = Math.min(...["—",":"].map(x=>{const i=c.indexOf(x);return i<0?1e9:i;}));
+    if(cut===1e9) return;
+    const head=c.slice(0,cut), rest=c.slice(cut+1).trim();
+    (expand(head).match(/[A-Z]+-[A-Z0-9.]+/g)||[]).forEach(id=>{ if(REG[id]){
+      passIds.add(id); (noteById[id]=noteById[id]||[]).push(rest); } }); });
   const isFlow = m.mode==="flow";
   const status = id => { const r=REG[id];
     if(obsIds.has(id)) return "finding";
@@ -256,25 +262,37 @@ function render(){
     const counts={finding:0,hypo:0,pass:0,ok:0,notrun:0,tier3:0};
     ids.forEach(id=>counts[status(id)]++);
     const examined = counts.finding+counts.pass+counts.ok;
+    const segs=[`${counts.finding} raised findings`,
+      `${counts.pass} passed with documented evidence`,
+      `${counts.ok} examined with nothing to report`];
+    if(counts.notrun) segs.push(`${counts.notrun} not run (need a flow audit)`);
+    if(counts.tier3) segs.push(`${counts.tier3} hypothesis-only (Tier 3)`);
+    if(counts.hypo) segs.push(`${counts.hypo} hypotheses raised`);
     h += `<h2>Coverage — ${examined} of ${ids.length} principles examined</h2>
-    <div class="hint">${counts.finding} raised findings · ${counts.pass} passed with documented evidence ·
-      ${counts.ok} examined with nothing to report · ${counts.notrun+counts.tier3} not run
-      (${counts.notrun} need flow context, ${counts.tier3} are Tier-3 hypothesis-only${counts.hypo?`; ${counts.hypo} hypotheses raised`:""})</div>`;
+    <div class="hint">${segs.join(" · ")}</div>`;
+    const findsById={};
+    (D.findings||[]).concat(D.hypotheses||[]).forEach(f=>(f.principles||[]).forEach(p=>
+      (findsById[p]=findsById[p]||[]).push(f.id)));
     const groups={};
     ids.forEach(id=>{(groups[REG[id].framework]=groups[REG[id].framework]||[]).push(id);});
-    const chipCls={finding:"finding",hypo:"hypo",pass:"pass",ok:"",notrun:"notrun",tier3:"notrun"};
-    h += `<details class="expl"><summary>Full coverage map by framework (tap a chip's label for the principle name)</summary>
-      <div class="covlegend"><span class="chip finding">finding</span><span class="chip hypo">hypothesis</span><span class="chip pass">documented pass</span><span class="chip">examined — nothing to report</span><span class="chip notrun">not run</span></div>` +
-      Object.entries(groups).map(([fw,gids])=>`<div class="fwgroup"><div class="fwname">${esc(fw)}</div>`+
-        gids.map(id=>`<span class="chip ${chipCls[status(id)]}" title="${esc(REG[id].name)}">${esc(id)}</span>`).join("")+
-        `</div>`).join("") +
-      `<div class="hint">"Examined" means the screen was scanned against that principle's symptom
-       checklist within static-screenshot limits; only notable passes get written evidence.</div></details>`;
+    const STAT={finding:["⚠ finding","finding"],hypo:["? hypothesis","hypo"],
+      pass:["✓ pass — documented","pass"],ok:["✓ examined","okst"],
+      notrun:["– not run","nr"],tier3:["– hypothesis-only","nr"]};
+    h += `<details class="expl" open><summary>All ${ids.length} principles, by framework</summary>` +
+      Object.entries(groups).map(([fw,gids])=>`<div class="fwname">${esc(fw)}</div><table class="covtab">`+
+        gids.map(id=>{const st=status(id);
+          const note = (st==="finding"||st==="hypo") ? "→ "+(findsById[id]||[]).map(x=>"#"+num(x)).join(", ")
+            : st==="pass" ? (noteById[id]||[]).map(esc).join("<br>")
+            : st==="notrun" ? "needs a screen sequence — run a flow audit"
+            : st==="tier3" ? "needs behavioral data — never scored"
+            : "scanned against its symptom checklist; nothing to report";
+          return `<tr><td class="st ${STAT[st][1]}">${STAT[st][0]}</td>
+            <td style="font-family:var(--mono);font-size:.74rem;white-space:nowrap">${esc(id)}</td>
+            <td>${esc(REG[id].name)}</td><td class="covnote">${note}</td></tr>`;}).join("")
+        +`</table>`).join("") +
+      `<div class="hint">"Examined" means the screen(s) were scanned against that principle's
+       symptom checklist within static-screenshot limits; notable passes carry written evidence.</div></details>`;
   }
-  if(cc.length){ h += `<h2>Documented passes (${cc.length})</h2><div class="passgrid">`+
-    cc.map(c=>{const ix=c.indexOf("—")>=0?c.indexOf("—"):c.indexOf(":");
-      const head=ix>0?c.slice(0,ix).trim():"", rest=ix>0?c.slice(ix+1).trim():c;
-      return `<div>✓ <b>${esc(head)}</b> ${esc(rest)}</div>`;}).join("")+`</div>`; }
 
   h += `<div class="foot"><strong>Methodology.</strong> Frameworks: ${(m.frameworks_applied||[]).map(esc).join(", ")}.
     Tiers run: ${(m.tiers_run||[]).join(", ")} (1 = static screenshot, 2 = flow, 3 = behavioral hypotheses).

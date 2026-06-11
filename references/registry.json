@@ -274,33 +274,6 @@
   "category": "content",
   "file": "content-design.md"
  },
- "FOGG-M": {
-  "name": "Motivation",
-  "framework": "Fogg Behavior Model (B = MAP)",
-  "tier": [
-   3
-  ],
-  "category": "trust_persuasion",
-  "file": "fogg.md"
- },
- "FOGG-A": {
-  "name": "Ability",
-  "framework": "Fogg Behavior Model (B = MAP)",
-  "tier": [
-   3
-  ],
-  "category": "trust_persuasion",
-  "file": "fogg.md"
- },
- "FOGG-P": {
-  "name": "Prompt",
-  "framework": "Fogg Behavior Model (B = MAP)",
-  "tier": [
-   3
-  ],
-  "category": "trust_persuasion",
-  "file": "fogg.md"
- },
  "GP-01": {
   "name": "Automate unwanted workload",
   "framework": "Gerhardt-Powals' Cognitive Engineering Principles",

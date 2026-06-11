@@ -34,7 +34,7 @@ All scripts: `$SKILL/.venv/bin/python $SKILL/scripts/<script>` — contracts in 
   `gerhardt-powals.md`, `content-design.md`, `cialdini.md`, `recurring-failures.md`.
 - Flow mode adds Tier 2: `nielsen.md`, `norman.md`, `shneiderman.md`, `tognazzini.md`.
   (Single mode: still load `nielsen.md` + `norman.md` — their Tier-1 symptoms apply.)
-- Tier 3 opt-in adds: `fogg.md` (+ cialdini.md Tier-3 section).
+- Tier 3 opt-in adds: cialdini.md's Tier-3 effectiveness section (hypotheses only).
 
 ## 4. Measure (before any judgment)
 Run the auto pass: `measure.py <images> --json tmp/measurements.json`. During analysis,
@@ -51,7 +51,8 @@ principle ID and name its `element` in plain text. Localized ⇒ box_2d; whole-s
 Flow mode additionally: transition pass — cross-screen consistency (NLS-04/SHN-01), action
 acknowledgement (NLS-01/SHN-03), exits/undo (NLS-03/SHN-06), memory load (SHN-08/RF-12),
 peak-end on the final screen (PEAK-01); populate the `flow` block.
-Tier-3 opt-in: FOGG-M/A/P diagnosis → `hypotheses` only, each with a validation method.
+Tier-3 opt-in: persuasion-effectiveness hypotheses only (cialdini.md Tier-3 boundary),
+each with a validation method.
 Also record `clean_checks`: categories/principles examined that passed.
 
 ## 6. Filter, merge, score

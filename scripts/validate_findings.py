@@ -85,6 +85,21 @@ def main():
     for f in data.get("findings", []):
         check_finding(f, registry, errors, in_hypotheses=False)
         per_cat[f.get("category")] = per_cat.get(f.get("category"), 0) + 1
+
+    # ID ordering: boxed first, then screen-level, then cross-screen
+    def grp(f):
+        if f.get("box_2d") is not None:
+            return 0
+        return 1 if f.get("screen_index") is not None else 2
+    seq = sorted(data.get("findings", []),
+                 key=lambda f: int(re.search(r"\d+", f.get("id", "F-0")).group()))
+    last = 0
+    for f in seq:
+        g = grp(f)
+        if g < last:
+            errors.append(f"{f['id']}: ID order — boxed findings get the lowest numbers, "
+                          "then screen-level, then cross-screen (see report-spec.md)")
+        last = max(last, g)
     for f in data.get("hypotheses", []):
         check_finding(f, registry, errors, in_hypotheses=True)
     for cat, n in per_cat.items():

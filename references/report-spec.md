@@ -51,6 +51,12 @@ links here and never restates it.
 `box_2d` is `[ymin, xmin, ymax, xmax]` on 0–1000; `null` for screen-level findings.
 `screen_index` 0-based; `null` = cross-screen (flow mode), which implies reach ≥ screen count.
 
+**ID assignment order (enforced by validate_findings.py):** findings with a box_2d get
+the lowest numbers (prefer reading order: by screen_index, then top-to-bottom), then
+screen-level findings (box null, screen_index set), then cross-screen findings
+(screen_index null). Report markers show only boxed findings, so this keeps marker
+numbers contiguous from #1 with the unanchored findings appended after.
+
 ## Conciseness contract (verbatim from Qualia)
 Total ≤60 words across issue + why_it_matters + recommendation. issue ONE sentence ≤20
 words. recommendation action-verb-first ≤25 words. NO filler ("It's important to note…").

@@ -65,8 +65,9 @@ Output dir: `audits/<slug>-<YYYY-MM-DD>/` (slug from goal/screens).
 Write `findings.json`, then run `validate_findings.py findings.json` — fix every error it
 reports and re-run until clean. Then:
 - `annotate.py findings.json --images <originals> --out <dir>/annotated/`
-- `build_report.py findings.json --annotated <dir>/annotated/ --template
-  assets/report-template.html --out <dir>/report.html`
+- `build_report.py findings.json --images <originals> --template
+  assets/report-template.html --out <dir>/report.html` (originals, not annotated —
+  the report draws its own interactive markers)
 - Write `summary.md` per the template in report-spec.md.
 
 ## 8. Re-audit mode (when prior findings.json given)

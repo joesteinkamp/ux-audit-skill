@@ -26,10 +26,14 @@ are logged to stderr and skipped — never guessed.
 
 ## build_report.py — single-file HTML report
 ```
-build_report.py findings.json --annotated annotated/ \
+build_report.py findings.json --images s0.png [s1.png...] \
     --template assets/report-template.html --out report.html
 ```
-Base64-embeds images; zero network requests in output.
+Pass ORIGINAL screenshots in screen_index order — finding markers render as
+interactive HTML overlays (hover popovers), so annotated PNGs would double-draw.
+(`--annotated dir/` remains as a legacy fallback.) Base64-embeds images; zero
+network requests in output. The annotated PNGs from annotate.py are still the
+standalone shareable artifacts.
 
 ## build_registry.py — citation vocabulary
 ```

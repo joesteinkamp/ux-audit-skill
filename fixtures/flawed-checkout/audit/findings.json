@@ -114,9 +114,15 @@
     ]}]
   },
   "clean_checks": [
-    "GST-01/GST-04: form fields and summary rows are aligned and grouped to match semantics",
-    "JAKOB-01: form-left / summary-right checkout layout follows convention",
-    "NLS-02: item names and prices use plain user language",
-    "DARK-01..06: no dark patterns beyond the unexplained asterisk (filed as CNT-06)"
+    "GST-01/GST-04 — form fields and summary rows aligned and grouped to match semantics",
+    "GST-07 — order items correctly contained in the summary card boundary",
+    "JAKOB-01 — form-left / summary-right checkout layout follows convention",
+    "NLS-02 — item names and prices use plain user language",
+    "NLS-06 — cart contents stay visible beside the form; nothing to recall",
+    "NRM-02 — inputs and buttons are recognizably interactive; no false affordances (RF-01)",
+    "GP-06 — payment fields grouped in conventional order (card, expiry, CVC)",
+    "WCAG-2.5.8 — primary buttons ~50px tall, above the 24px desktop minimum",
+    "MILL-01 — three line items, well within working-memory limits",
+    "DARK-01..06 — no fake urgency, pre-checked costs, or confirmshaming (the dangling asterisk is filed as CNT-06)"
   ]
 }

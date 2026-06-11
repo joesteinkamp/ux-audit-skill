@@ -15,11 +15,11 @@
     "usability": "Band 90+: one clearly primary action, conventional layout, visible active nav state, nothing destructive unguarded.",
     "cognitive_load": "Band 90+: two fields, one decision, no mental work the UI could do.",
     "visual_layout": "Band 90+: grouping matches semantics; single hierarchy passes the squint test.",
-    "accessibility": "Band 80-89: measured contrast passes on CTA (6.7:1) and helper text (5.31:1); all inputs visibly labeled; focus states unverifiable from a static image.",
-    "content": "Band 80-89: outcome-named CTA and useful helper copy; truncated account label in the header is the only blemish.",
-    "trust_persuasion": "Band 80-89: no dark patterns; no high-stakes ask on this screen requiring trust signals."
+    "accessibility": "88, not higher, only because a static image can't verify focus indicators or keyboard order — everything measurable passed (CTA 6.7:1, helper text 5.31:1, all inputs labeled).",
+    "content": "88: every visible string passes; a single screen can't confirm voice consistency across the rest of the product, which is what 90+ asserts.",
+    "trust_persuasion": "85: zero dark patterns; this screen simply has no high-stakes ask, so there is little for the category to positively demonstrate."
   },
-  "one_big_thing": "Nothing structural to fix on this screen; the lowest-value real improvement is confirming saves visibly, which can only be evaluated with the post-save screen.",
+  "one_big_thing": "Nothing to fix: this screen passes every static check that was run. The scores below 90+ reflect what a single static screenshot cannot prove (save feedback, focus states, cross-screen consistency), not hidden problems.",
   "findings": [],
   "hypotheses": [],
   "measurements": {
@@ -29,13 +29,25 @@
     ]}]
   },
   "clean_checks": [
-    "WCAG-3.3.2: both inputs have persistent visible labels",
-    "WCAG-1.4.3: primary CTA 6.7:1 and helper text 5.31:1, measured passes",
-    "NRM-06: active nav item differentiated by weight and accent bar, not color alone",
-    "RF-04/CNT-01: 'Save changes' names its outcome",
-    "GST-01/GST-07: label-field-helper grouping matches semantics",
-    "RF-08: a single primary action; Cancel is visibly secondary",
-    "DARK-01..06: no dark patterns",
-    "Not auditable statically: save feedback (NLS-01), focus indicators, keyboard order — verify live"
+    "WCAG-3.3.2 — both inputs have persistent visible labels above the field",
+    "WCAG-1.4.3 — primary CTA white on #1d4ed8, measured 6.7:1 (needs 4.5:1)",
+    "WCAG-1.4.3 — helper text #636c79 on white, measured 5.31:1 (needs 4.5:1)",
+    "WCAG-1.4.1 — active nav item marked by weight + accent bar, not color alone",
+    "WCAG-2.5.8 — both buttons ~48px tall, double the 24px desktop minimum",
+    "NLS-02 — 'Full name', 'Email address', 'Save changes': plain user language, zero jargon",
+    "NLS-04 — header/sidebar/form layout follows settings-page convention",
+    "NLS-06 — current values shown in fields; nothing to remember or re-enter",
+    "NLS-08 — no promotional or irrelevant content competing with the task",
+    "NRM-02 — buttons look like buttons, fields like fields; no false affordances (RF-01)",
+    "NRM-06 — active nav state and enabled controls clearly distinguishable at a glance",
+    "GST-01/GST-07 — label, field, and helper text grouped tighter than unrelated items",
+    "GP-08 — only the two task-relevant fields on screen; no admin metadata",
+    "HICK-01/RF-08 — exactly one primary action; Cancel visibly secondary",
+    "CNT-01/RF-04 — 'Save changes' names its outcome, not its mechanism",
+    "CNT-08 — helper copy is one short purposeful sentence",
+    "CNT-10 — email field carries inline guidance ('only for receipts')",
+    "JAKOB-01 — matches the settings pattern of every familiar SaaS product",
+    "DARK-01..06 — no countdown, scarcity, pre-checked costs, confirmshaming, or hidden fees",
+    "Not statically auditable — save feedback (NLS-01), focus order, keyboard access: verify live"
   ]
 }

@@ -12,6 +12,8 @@ description: >
 
 Skill root: resolve via this file's location (referred to as `$SKILL` below).
 All scripts: `$SKILL/.venv/bin/python $SKILL/scripts/<script>` — contracts in scripts/README.md.
+If `$SKILL/.venv/bin/python` is missing, bootstrap it once first: `bash $SKILL/scripts/setup.sh`
+(creates the venv, installs Pillow — the only dependency; everything after it runs offline).
 
 ## 1. Intake — ONE AskUserQuestion round, exactly these questions
 1. **Goal** (free text): "What is the user trying to accomplish on these screens?" —
